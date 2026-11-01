@@ -22,7 +22,7 @@ jobs:
       - name: Download Windows helper binaries
         shell: pwsh
         run: |
-          $url = ([System.Uri]::new("https", "github.com", "/necronehru/spritz/releases/download/windows-binaries-2026-11-01/spritz-windows-binaries.zip")).AbsoluteUri
+          $url = "https://github.com/necronehru/spritz/releases/download/windows-binaries-2026-11-01/spritz-windows-binaries.zip"
           New-Item -ItemType Directory -Force -Path "bin/win32" | Out-Null
           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP/spritz-windows-binaries.zip"
           Expand-Archive -Path "$env:TEMP/spritz-windows-binaries.zip" -DestinationPath "bin/win32" -Force
