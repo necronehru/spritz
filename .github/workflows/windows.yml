@@ -51,7 +51,7 @@ jobs:
         run: node build/verify-package-win.js
 
       - name: Build Windows x64 installer
-        run: npx electron-builder --win nsis --x64
+        run: npx electron-builder --win nsis --x64 --publish never
 
       - uses: actions/upload-artifact@v4
         with:
