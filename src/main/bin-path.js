@@ -16,9 +16,16 @@ function isPackaged(proc) {
   return !!(proc.versions && proc.versions.electron) && !proc.defaultApp;
 }
 
-function resolveBin(name, { packaged, resourcesPath, exists }) {
-  const bundled = resourcesPath ? path.join(resourcesPath, 'bin', name) : null;
+function resolveBin(name, { packaged, resourcesPath, exists, platform = process.platform }) {
+  const executable = platform === 'win32' && !name.toLowerCase().endsWith('.exe')
+    ? name + '.exe'
+    : name;
+  const bundled = resourcesPath ? path.join(resourcesPath, 'bin', executable) : null;
   if (packaged && bundled) return bundled;
+  if (platform === 'win32') {
+    return [bundled].filter(Boolean)
+      .find((p) => { try { return exists(p); } catch (e) { return false; } }) || executable;
+  }
   return [bundled, '/opt/homebrew/bin/' + name, '/usr/local/bin/' + name, '/usr/bin/' + name]
     .filter(Boolean).find((p) => { try { return exists(p); } catch (e) { return false; } }) || name;
 }

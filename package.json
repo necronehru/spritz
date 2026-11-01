@@ -133,6 +133,27 @@
     },
     "dmg": {
       "writeUpdateInfo": false
+    },
+    "win": {
+      "extraResources": [
+        {
+          "from": "bin/win32",
+          "to": "bin"
+        },
+        {
+          "from": "native/mpv-win",
+          "to": "native/mpv-win"
+        }
+      ],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "executableName": "Spiritz"
     }
   },
   "devDependencies": {

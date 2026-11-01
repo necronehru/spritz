@@ -96,7 +96,10 @@ app.commandLine.appendSwitch('ignore-gpu-blocklist');
 
 let mpvAddon = null;
 try {
-  mpvAddon = require(path.join(__dirname, '..', '..', 'native', 'mpv', 'build', 'Release', 'mpv_render.node'));
+  const mpvAddonPath = process.platform === 'win32'
+    ? path.join(process.resourcesPath, 'native', 'mpv-win', 'mpv_render.node')
+    : path.join(__dirname, '..', '..', 'native', 'mpv', 'build', 'Release', 'mpv_render.node');
+  mpvAddon = require(mpvAddonPath);
 } catch (e) {
   console.error('[mpv addon] load failed:', e.message);
 }

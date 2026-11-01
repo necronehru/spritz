@@ -3,7 +3,7 @@ name: Build Spritz for Windows
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [windows-build]
 
 jobs:
   build:
@@ -18,6 +18,17 @@ jobs:
           New-Item -ItemType Directory -Force -Path "native/mpv-win" | Out-Null
           Invoke-WebRequest -Uri $url -OutFile "native/mpv-win/libmpv-2.dll"
           if ((Get-Item "native/mpv-win/libmpv-2.dll").Length -lt 1000000) { throw "MPV runtime DLL download is incomplete." }
+
+      - name: Download Windows helper binaries
+        shell: pwsh
+        run: |
+          $url = ([System.Uri]::new("https", "github.com", "/necronehru/spritz/releases/download/windows-binaries-2026-11-01/spritz-windows-binaries.zip")).AbsoluteUri
+          New-Item -ItemType Directory -Force -Path "bin/win32" | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP/spritz-windows-binaries.zip"
+          Expand-Archive -Path "$env:TEMP/spritz-windows-binaries.zip" -DestinationPath "bin/win32" -Force
+          foreach ($name in @("ffmpeg.exe", "ffprobe.exe", "yt-dlp.exe")) {
+            if (!(Test-Path "bin/win32/$name")) { throw "Missing Windows binary: $name" }
+          }
 
       - uses: actions/setup-node@v4
         with:
